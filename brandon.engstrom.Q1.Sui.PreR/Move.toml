@@ -1,9 +1,8 @@
 [package]
-name = "pre_r"
-version = "0.0.1"
+name = "PreR"
 
 [dependencies]
-Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/devnet" }
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/testnet" }
 
 [addresses]
-pre_r = "0x0"
+prer = "0x0"
