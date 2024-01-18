@@ -321,7 +321,23 @@ module prer::objects_with_events {
     }
 
 
-    
+    public fun destroy_object(o: ExampleObject) {
+        let ExampleObject { id } = o;
+        object::delete(id);
+    }
 
+
+    public fun collect_profits (
+        _: &StoreOwnerCap, shop: &mut Store, ctx: &mut TxContext
+    ) : Coin<SUI> {
+
+        let amount = balance::value(&shop.balance);
+
+        event::emit(ProfitsCollected { amount });
+        coin::take(&mut shop.balance, amount, ctx)
+    }
 
 }
+
+
+
