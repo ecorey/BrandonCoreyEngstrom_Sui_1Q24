@@ -290,10 +290,19 @@ module prer::objects_with_events {
 
     fun init(ctx: &mut TxContext) {
 
+        transfer::transfer(StoreOwnerCap {
+            id: object::new(ctx),
+        }, tx_context::sender(ctx));
 
-
+        transfer::share_object(Store {
+            id: object::new(ctx),
+            price: 1000,
+            balance: balance::zero()
+        })
 
     }
+
+
 
 
 
