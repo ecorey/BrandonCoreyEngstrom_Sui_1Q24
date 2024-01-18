@@ -258,7 +258,7 @@ module prer::objects_with_events {
     use sui::transfer;
     use sui::sui::SUI;
     use sui::coin::{Self, Coin};
-    use sui::object::{Self, UID};
+    use sui::object::{Self, ID, UID};
     use sui::balance::{Self, Balance};
     use sui::tx_context::{Self, TxContext};
 
@@ -278,9 +278,9 @@ module prer::objects_with_events {
     }
 
 
-    // struct ObjectBought has copy, drop {
-    //     id: ID
-    // }
+    struct ObjectBought has copy, drop {
+        id: ID
+    }
 
 
     struct ProfitsCollected has copy, drop {
@@ -304,8 +304,24 @@ module prer::objects_with_events {
 
 
 
+    public fun buy_example_object(
+        shop: &mut Store, payment: &mut Coin<SUI>, ctx: &mut TxContext
+    ) {
+        assert!(coin::value(payment) >= shop.price, ENotEnough);
+
+        let coin_balance = coin::balance_mut(payment);
+        let paid = balance::split(coin_balance, shop.price);
+        let id = object::new(ctx);
+
+        balance::join(&mut shop.balance, paid);
+
+        event::emit(ObjectBought { id: object::uid_to_inner(&id) });
+        transfer::transfer(ExampleObject {id}, tx_context::sender(ctx))
+
+    }
 
 
+    
 
 
 }
