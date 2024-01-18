@@ -3,10 +3,33 @@ module prer::pre_r {
     use sui::transfer;
     use sui::tx_context::TxContext;
     use sui::object::{Self, UID};
+    
+    
+    struct ExampleObject has key { 
+        id: UID
+    }
+
+    // non-entry create function
+    public fun create(ctx: &mut TxContext): ExampleObject {
+        ExampleObject { id: object::new(ctx) }
+    }
+
+    // entry create and transfer
+    entry fun create_and_transfer(to: address, ctx: &mut TxContext) {
+        transfer::transfer(create(ctx), to)
+    }
+
+    
+}
+
+module prer::object_example {
+
+    use sui::transfer;
     use sui::sui::SUI;
     use sui::coin::{Self, Coin};
+    use sui::object::{Self, UID};
     use sui::balance::{Self, Balance};
-    
+    use sui::tx_context::{Self, TxContext};
 
     struct ExampleObject has key { 
         id: UID
@@ -35,25 +58,66 @@ module prer::pre_r {
 
     }
 
+    // fun init(ctx: &mut TxContext) {
+    //     transfer::transfer(ExampleObjectCap {
+    //         id: object::new(ctx)
+    //     }, tx_context::sender(ctx));
 
-//   fun init(ctx: &mut TxContext) {
-//         transfer::transfer(ExampleObjectCap {
-//             id: object::new(ctx)
-//         }, tx_context::sender(ctx));
+    //     // Share the object 
+    //     transfer::share_object(ExampleObjectShop {
+    //         id: object::new(ctx),
+    //         price: 1000,
+    //         balance: balance::zero()
+    //     })
+    // }
 
-//         // Share the object 
-//         transfer::share_object(ExampleObjectShop {
-//             id: object::new(ctx),
-//             price: 1000,
-//             balance: balance::zero()
-//         })
-//     }
+    public fun buy_example_object (
+        shop: &mut ExampleObjectShop, payment: &mut Coin<SUI>, ctx: &mut TxContext    
+    ) {
+        assert!(coin::value(payment) >= shop.price, ENotEnough);
+
+        let coin_balance = coin::balance_mut(payment);
+        let paid = balance::split(coin_balance, shop.price);
+
+        balance::join(&mut shop.balance, paid);
+
+        transfer::transfer(ExampleObject {
+            id: object::new(ctx)
+        }, tx_context::sender(ctx))
+    }
+
+    // deconstruct and delete object
+    public fun delete_example_object(e: ExampleObject) {
+        let ExampleObject { id } = e;
+        object::delete(id);
+    }
+
+
+    public fun collect_profits (
+        _: &ExampleObjectCap, shop: &mut ExampleObjectShop, ctx: &mut TxContext
+    ) : Coin<SUI> {
+
+        let amount = balance::value(&shop.balance);
+        coin::take(&mut shop.balance, amount, ctx)
+
+    }
+
+}
 
 
 
+module prer::wrapper {
+
+    use sui::object::{Self, UID};
+    use sui::tx_context::TxContext;
+
+    struct Wrapper<T: store> has key, store {
+        id: UID, 
+        contents: T
+    }
 
 
-
+    
 
 
 }
