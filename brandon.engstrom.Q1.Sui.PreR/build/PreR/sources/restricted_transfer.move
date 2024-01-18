@@ -341,3 +341,97 @@ module prer::objects_with_events {
 
 
 
+
+
+// OTW
+module prer::one_time_witness_registry {
+
+    use sui::tx_context::TxContext;
+    use sui::object::{Self, UID};
+    use std::string::String;
+    use sui::transfer;
+
+    use sui::types;
+
+    const ENotOneTimeWitness: u64 = 0;
+
+
+
+    struct UniqueTypeError<phantom T> has key {
+        id: UID,
+        name: String
+    }
+
+
+    // public fun add_record<T: drop>(
+    //     witness: T,
+    //     name: String, 
+    //     ctx: &mut TxContext
+    // ) {
+    //     assert!(types::is_one_time_witness(&witness), ENotEnough);
+
+    //     transfer::share_object(UniqueTypeRecord<T> {
+    //         id: object::new(ctx),
+    //         name
+    //     });
+    // }
+
+}
+
+
+
+// module prer::my_otw {
+
+//     use std::string;
+//     use sui::tx_context::TxContext;
+//     use examples::one_time_witness_registry as registry;
+
+
+//     struct MY_OTW has drop {}
+
+
+//     fun init(witness: MY_OTW, ctx: &mut TxContext) {
+//         registry::add_record (
+//             witness,
+//             string::utf8(b"My Record"),
+//             ctx
+//         )
+//     }
+
+// }
+
+
+// Capability
+module prer::item {
+
+    use sui::transfer;
+    use sui::object::{Self, UID};
+    use std::string::{Self, String};
+    use sui::tx_context::{Self, TxContext};
+
+
+    struct Admincap has key { id: UID }
+
+    struct Item has key, store { id: UID, name: String}
+
+
+    fun init(ctx: &mut TxContext ) {
+        transfer::transfer( Admincap {
+            id: object::new(ctx)
+        }, tx_context::sender(ctx))
+    }
+
+
+    public fun create_and_send (
+        _: &Admincap, name: vector<u8>, to: address, ctx: &mut TxContext
+    ) {
+        transfer::transfer(  Item {
+            id: object::new(ctx),
+            name: string::utf8(name)
+        }, to)
+    }
+
+
+   
+
+}
