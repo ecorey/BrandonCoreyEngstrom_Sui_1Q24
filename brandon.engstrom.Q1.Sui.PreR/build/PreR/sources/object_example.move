@@ -249,3 +249,11 @@ module prer::restricted_transfer {
     }
 
 }
+
+
+
+//EVENTS
+module prer::objects_with_events {
+
+    
+}
