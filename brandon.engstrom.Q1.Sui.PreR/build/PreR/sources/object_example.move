@@ -255,5 +255,48 @@ module prer::restricted_transfer {
 //EVENTS
 module prer::objects_with_events {
 
+    use sui::transfer;
+    use sui::sui::SUI;
+    use sui::coin::{Self, Coin};
+    use sui::object::{Self, UID};
+    use sui::balance::{Self, Balance};
+    use sui::tx_context::{Self, TxContext};
+
+    use sui::event;
     
+
+    const ENotEnough: u64 = 0;
+
+    struct StoreOwnerCap has key { id: UID }
+
+    struct ExampleObject has key { id: UID }
+
+    struct Store has key {
+        id: UID, 
+        price: u64, 
+        balance: Balance<SUI>
+    }
+
+
+    // struct ObjectBought has copy, drop {
+    //     id: ID
+    // }
+
+
+    struct ProfitsCollected has copy, drop {
+        amount: u64
+    }
+
+
+    fun init(ctx: &mut TxContext) {
+
+
+
+
+    }
+
+
+
+
+
 }
