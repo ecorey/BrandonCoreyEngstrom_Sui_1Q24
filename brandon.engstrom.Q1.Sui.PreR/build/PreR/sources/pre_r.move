@@ -58,18 +58,18 @@ module prer::object_example {
 
     }
 
-    // fun init(ctx: &mut TxContext) {
-    //     transfer::transfer(ExampleObjectCap {
-    //         id: object::new(ctx)
-    //     }, tx_context::sender(ctx));
+    fun init(ctx: &mut TxContext) {
+        transfer::transfer(ExampleObjectCap {
+            id: object::new(ctx)
+        }, tx_context::sender(ctx));
 
-    //     // Share the object 
-    //     transfer::share_object(ExampleObjectShop {
-    //         id: object::new(ctx),
-    //         price: 1000,
-    //         balance: balance::zero()
-    //     })
-    // }
+        // Share the object 
+        // transfer::share_object(ExampleObjectShop {
+        //     id: object::new(ctx),
+        //     price: 1000,
+        //     balance: balance::zero()
+        // })
+    }
 
     public fun buy_example_object (
         shop: &mut ExampleObjectShop, payment: &mut Coin<SUI>, ctx: &mut TxContext    
@@ -178,4 +178,45 @@ module prer::profile {
         container
     }
     
+}
+
+
+module prer::restricted_transfer {
+
+    use sui::tx_context::{Self, TxContext};
+    use sui::balance::{Self, Balance};
+    use sui::coin::{Self, Coin};
+    use sui::object::{Self, UID};
+    use sui::transfer;
+    use sui::sui::SUI;
+
+
+    const EWrongAmount: u64 = 0;
+
+
+    struct GovernmentCapability has key { id: UID }
+
+
+    struct TitleDeed has key {
+        id: UID,
+    }
+
+    struct LandRegistry has key {
+        id: UID,
+        balance: Balance<SUI>,
+        fee: u64   
+    }
+
+
+    fun init(ctx: &mut TxContext) {
+
+
+
+    }
+
+
+
+
+
+
 }
