@@ -576,6 +576,37 @@ module prer::peace_guardian {
 
 
 
+// STORABLE WITNESS
+
+module prer::transferable_witness {
+
+    use sui::transfer;
+    use sui::object::{Self, UID};
+    use sui::tx_context::{Self, TxContext};
+
+
+
+    struct WITNESS has drop, store {}
+
+    struct WitnessCarrier  has key { id: UID, witness: WITNESS}
+
+    fun init(ctx: &mut TxContext) {
+        transfer::transfer(
+            WitnessCarrier { id: object::new(ctx), witness: WITNESS {} },
+            tx_context::sender(ctx)
+        )
+    }
+
+
+    public fun get_witness(carrier: WitnessCarrier): WITNESS {
+        let WitnessCarrier { id, witness } = carrier;
+        object::delete(id);
+        witness
+    }
+
+
+}
+
 
 
 
