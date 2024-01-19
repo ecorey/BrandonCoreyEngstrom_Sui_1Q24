@@ -651,7 +651,12 @@ module prer::trade_in {
     }
 
 
+    public fun pay_full( ) {
 
+        
+
+
+    }
 
 
 
