@@ -629,7 +629,7 @@ module prer::trade_in {
 
     const EWrongModel: u64 = 1;
 
-    const EIncorrecetAmount: u64 = 2;
+    const EIncorrectAmount: u64 = 2;
 
 
 
@@ -651,18 +651,29 @@ module prer::trade_in {
     }
 
 
-    public fun pay_full( ) {
+    public fun pay_full(receipt: Receipt, payment: Coin<SUI>) {
+    
+    let Receipt { price } = receipt;
+    assert!(coin::value(&payment) == price, EIncorrectAmount);
 
-        
-
-
+    transfer::public_transfer(payment, @prer);
     }
 
 
+    public fun trade_in(receipt: Receipt, old_phone: Phone, payment: Coin<SUI>) {
+    let Receipt { price } = receipt;
+    let tradein_price = if (old_phone.model == 1) {
+        MODEL_ONE_PRICE
+    } else {
+        MODEL_TWO_PRICE
+    };
+    let to_pay = price - (tradein_price / 2);
 
+    assert!(coin::value(&payment) == to_pay, EIncorrectAmount);
 
-
-
-
+    transfer::public_transfer(old_phone, @prer);
+    transfer::public_transfer(payment, @prer);
+    }
 
 }
+
