@@ -677,3 +677,21 @@ module prer::trade_in {
 
 }
 
+module prer::lock_and_key {
+
+    use sui::object::{Self, ID, UID};
+    use sui::transfer;
+    use sui::tx_context::{Self, TxContext};
+    use std::option::{Self, Option};
+
+
+    
+
+
+
+
+
+
+
+
+}
