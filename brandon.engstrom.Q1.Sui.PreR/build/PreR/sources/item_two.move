@@ -621,8 +621,35 @@ module prer::trade_in {
     use sui::object::{Self, UID};
     use sui::tx_context::{Self, TxContext};
 
-
     
+    const MODEL_ONE_PRICE: u64 = 10000;
+
+
+    const MODEL_TWO_PRICE: u64 = 20000;
+
+    const EWrongModel: u64 = 1;
+
+    const EIncorrecetAmount: u64 = 2;
+
+
+
+    struct Phone has key, store { id: UID, model: u8 }
+
+    // hp
+    struct Receipt { price: u64 }
+
+
+    public fun buy_phone(model: u8, ctx: &mut TxContext): (Phone, Receipt) {
+        assert!(model == 1 || model == 2, EWrongModel);
+
+        let price = if (model == 1) MODEL_ONE_PRICE else MODEL_TWO_PRICE;
+
+        (
+            Phone { id: object::new(ctx), model },
+            Receipt { price }
+        )
+    }
+
 
 
 
