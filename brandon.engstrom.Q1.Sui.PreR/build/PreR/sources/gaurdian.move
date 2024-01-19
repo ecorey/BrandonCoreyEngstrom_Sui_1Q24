@@ -539,11 +539,40 @@ module prer::item_two {
 // WITNESS
 module prer::gaurdian {
 
+    use sui::object::{Self, UID};
+    use sui::tx_context::{Self, TxContext};
 
-    
+    struct Gaurdian<phantom T: drop> has key, store {
+        id: UID,
+    }
+
+    public fun create_guardian<T: drop> (
+        _witness: T, ctx: &mut TxContext
+    ): Gaurdian<T> {
+        Gaurdian { id: object::new(ctx) }
+    }
 
 }
 
+
+module prer::peace_guardian {
+
+    use sui::transfer;
+    use sui::tx_context::{Self, TxContext};
+
+
+    use prer::gaurdian;
+
+    struct PEACE has drop {}
+
+    
+    fun init(ctx: &mut TxContext) {
+        transfer::public_transfer(
+            gaurdian::create_guardian(PEACE {}, ctx), tx_context::sender(ctx)
+        )
+    }
+
+}
 
 
 
