@@ -610,3 +610,27 @@ module prer::transferable_witness {
 
 
 
+// HOT POTATO
+
+module prer::trade_in {
+
+
+    use sui::transfer;
+    use sui::sui::SUI;
+    use sui::coin::{Self, Coin};
+    use sui::object::{Self, UID};
+    use sui::tx_context::{Self, TxContext};
+
+
+    
+
+
+
+
+
+
+
+
+
+
+}
