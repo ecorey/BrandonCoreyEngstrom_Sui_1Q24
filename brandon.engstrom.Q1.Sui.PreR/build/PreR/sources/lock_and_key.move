@@ -693,7 +693,7 @@ module prer::lock_and_key {
     const ELockIsFull: u64 = 2;
 
 
-    struct Lock<T: store + key> {
+    struct Lock<T: store + key> has key {
         id: UID, 
         locked: Option<T>
     }
@@ -711,7 +711,54 @@ module prer::lock_and_key {
     }
 
 
+    public fun create<T: store + key>(obj: T, ctx: &mut TxContext): Key<T> {
+        let id = object::new(ctx);
+        let for = object::uid_to_inner(&id);
+
+        transfer::share_object(Lock<T> {
+            id,
+            locked: option::some(obj),
+        });
+
+        Key<T>{ id: object::new(ctx), for }
+    }
+
+
+    public fun lock<T: store + key> (
+        obj: T,
+        lock: &mut Lock<T>,
+        key: &Key<T>,
+    ) {
+        assert!(option::is_none(&lock.locked), ELockIsFull);
+        assert!(&key.for == object::borrow_id(lock), EKeyMismatch);
+
+        option::fill(&mut lock.locked, obj);
+    }
+
+
+    public fun unlock<T: store + key> (
+        lock: &mut Lock<T>,
+        key: &Key<T>,
+    ) : T {
+        assert!(option::is_some(&lock.locked), ELockIsEmpty);
+        assert!(&key.for == object::borrow_id(lock), EKeyMismatch);
+
+        option::extract(&mut lock.locked)
+    }
+
+}
+
+
+
+//NFT EXAMPLE
+
+module prer::devnet_nft {
+
+
+
+
+
+
+
     
-
-
 }
