@@ -685,13 +685,33 @@ module prer::lock_and_key {
     use std::option::{Self, Option};
 
 
+    const ELockIsEmpty: u64 = 0;
+
+    const EKeyMismatch: u64 = 1;
+
+
+    const ELockIsFull: u64 = 2;
+
+
+    struct Lock<T: store + key> {
+        id: UID, 
+        locked: Option<T>
+    }
+
+
+
+    struct Key<phantom T: store + key> has key, store {
+        id: UID,
+        for: ID
+    }
+
+
+    public fun key_for<T: store + key>(key: &Key<T>): ID {
+        key.for
+    }
+
+
     
-
-
-
-
-
-
 
 
 }
