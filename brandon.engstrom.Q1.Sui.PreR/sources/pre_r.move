@@ -754,11 +754,80 @@ module prer::lock_and_key {
 
 module prer::devnet_nft {
 
+    use sui::url::{Self, Url};
+    use std::string;
+    use sui::object::{Self, UID, ID};
+    use sui::event;
+    use sui::transfer;
+    use sui::tx_context::{Self, TxContext};
 
 
 
 
+    struct DevNetNFT has key, store {
+
+        id: UID,
+        name: string::String;
+        description: string::String;
+        url: Url;
+
+    }
 
 
-    
+    struct NFTMinted has copy, drop {
+
+        object_id: ID,
+        creator: address,
+        name: string::String;
+
+    }
+
+
+
+    public fun name( nft: &DevNetNFT ): &string::String {
+        &nft.name
+    }
+
+
+    public fun description ( nft: &DevNetNFT ): &string::String {
+        &nft.description
+    }
+
+
+    public fun url ( nft: &DevNetNFT ): &Url {
+        &nft.url
+    }
+
+
+    public entry mint_to_sender (
+
+        name: vector<u8>, 
+        description: vector<u8>, 
+        url: vector<u8>, 
+        ctx: &mut TxContext 
+        
+        ) {
+
+        let sender = tx_context::sender(ctx);
+
+        let nft = DevNetNFT {
+            id: object::new(ctx),
+            name: string::uft8(name),
+            description: string::utf8(description),
+            url: url::new_unsafe_from_bytes(url)
+        };
+
+        event::emit(NFTMinted {
+            object_id: object::id(&nft),
+            creator: sender,
+            name: nft.name
+        });
+
+        transfer::public_transfer(nft, sender);
+
+
+    }
+
+
+
 }
