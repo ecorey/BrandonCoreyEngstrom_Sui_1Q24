@@ -1,4 +1,4 @@
-**All TESTNET**
+**All DEVNET**
 **Note Secure for Learning Only, Never expose PK**
 
 # keygen:
