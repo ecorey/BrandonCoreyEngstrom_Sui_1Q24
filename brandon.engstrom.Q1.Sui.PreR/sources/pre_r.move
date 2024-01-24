@@ -871,4 +871,129 @@ module prer::muscle_memory {
 
 
 
+module prer::puppy {
 
+    use std::string::String;
+    use std::vector;
+    use sui::tx_context::{Self, TxContext};
+    use sui::object::{Self, ID, UID};
+    use sui::event;
+
+
+    struct Puppy has key, store {
+
+        id: UID, 
+        name: String, 
+        traits: vector<String>,
+        url: String,
+
+    }
+
+    // event
+    struct PuppyMinted has copy, drop {
+        puppy_id: ID, 
+        minted_by: address,
+    }
+
+
+
+    public fun mint(
+        name: String, 
+        traits: vector<String>,
+        url: String, 
+        ctx: &mut TxContext
+    ) : Puppy {
+        let id = object::new(ctx);
+
+        event::emit( PuppyMinted {
+            puppy_id: object::uid_to_inner(&id),
+            minted_by: tx_context::sender(ctx),
+        });
+
+        Puppy { id, name, traits, url }
+
+    }
+
+
+
+}
+
+
+
+
+
+// DINO EGG
+
+module prer::dino_nft {
+
+    use sui::url::{Self, Url};
+    use std::string;
+    use std::option::{Self, Option};
+    use sui::object::{Self, ID, UID};
+    use sui::coin::{Self, Coin};
+    use sui::balance::{Self, Balance};
+    use sui::event;
+    use sui::transfer;
+    use sui::tx_context::{Self, TxContext};
+    use sui::sui::SUI;
+
+
+
+    const EWrongAmount: u64 = 0;
+
+
+    struct DinoNFT has key, store {
+
+        id: UID,
+        description: string::String,
+        url: Url,
+        dino_egg: Option<ID>,
+
+    }
+
+
+    // mint capability
+    struct MinterCap has key { id: UID }
+
+
+    // event
+    struct MinterNFTEvent has copy, drop {  
+        object_id: ID, 
+        creator: address, 
+        name: string::String,
+    }
+
+
+
+    // shared object
+    struct MintingTreasury has key {
+        id: UID,
+        balance: Balance<SUI>,
+        mintingfee: u64,
+    }
+
+
+
+    fun init (ctx: &mut TxContext) {
+
+        transfer::transfer( MinterCap {
+            id: object::new(ctx)
+        }, tx_context::sender(ctx));
+
+
+        transfer::share_object(MintingTreasury {
+            id: object::new(ctx),
+            balance: balance::zero<SUI>(),
+            mintingfee: 5000000
+        })
+
+    }
+
+
+    
+
+
+
+
+
+}
