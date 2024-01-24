@@ -20,7 +20,8 @@ const keypair = Ed25519Keypair.fromSecretKey(privateKeyBytes);
 // Create a devnet client
 const client = new SuiClient({ url: getFullnodeUrl("devnet") });
 
-
+// Create a testnet client
+// const client = new SuiClient({ url: getFullnodeUrl("testnet") });
 
 const txb = new TransactionBlock();
 
