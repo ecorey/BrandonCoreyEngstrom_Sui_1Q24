@@ -1,6 +1,7 @@
 **All TESTNET**
 **Note Secure for Learning Only, Never expose PK**
-keygen:
+
+# keygen:
 
     You've generated a new Sui wallet: 0xb3d4cb714181fec39c22d820c963da9cfac970d3ab77c464b0dea06ce673c3e5
 
@@ -13,7 +14,7 @@ keygen:
 
     cd87527a5cbfe61abac15425e7e08689585bd20a9183eac0af68fc3ddc007c56
 
-airdrop:
+# airdrop:
 
     Success! Check out your TX here:
             https://suiscan.xyz/devnet/object/0xe549b151fa8e5230c015fd7e46c6d8beb11de90a729e77a4cbba4d045dbcb7d5
@@ -22,7 +23,7 @@ airdrop:
 ![airdrop](./airdrop.png)
 
 
-transfer:
+# transfer:
 
     Success! Check our your TX here:
         https://suiexplorer.com/txblock/GfNGEGQ3dfRgTQpKrfnvsohj4B58PUtffGHYKxB3whMw?network=devnet
