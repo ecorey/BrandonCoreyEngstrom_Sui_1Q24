@@ -945,6 +945,7 @@ module prer::dino_nft {
     struct DinoNFT has key, store {
 
         id: UID,
+        name: string::String,
         description: string::String,
         url: Url,
         dino_egg: Option<ID>,
@@ -987,11 +988,34 @@ module prer::dino_nft {
             mintingfee: 5000000
         })
 
-
     }
 
 
+   fun mint(
+        name: vector<u8>,
+        description: vector<u8>,
+        url: vector<u8>,
+        ctx: &mut TxContext
+    ): DinoNFT {
+        let nft = DinoNFT {
+            id: object::new(ctx),
+            name: string::utf8(name),
+            description: string::utf8(description),
+            url: url::new_unsafe_from_bytes(url),
+            dino_egg: option::none()
+        };
+        let sender = tx_context::sender(ctx);
+        event::emit(MinterNFTEvent {
+            object_id: object::uid_to_inner(&nft.id),
+            creator: sender,
+            name: nft.name,
+        });
+        nft
+    }
 
+    public entry fun mint_to_account ( ) {
+
+    }
 
 
 }
