@@ -923,6 +923,7 @@ module prer::puppy {
 
 
 // DINO EGG
+// https://github.com/hyd628/sui_intro_workshop/blob/main/sources/sui_dinos.move
 
 module prer::dino_nft {
 
@@ -1013,9 +1014,33 @@ module prer::dino_nft {
         nft
     }
 
-    public entry fun mint_to_account ( ) {
+    public entry fun mint_to_account ( 
+        mintingtreasury: &mut MintingTreasury,
+        name: vector<u8>,
+        description: vector<u8>,
+        url: vector<u8>,
+        fee: Coin<SUI>,
+        ctx: &mut TxContext,
+     ) {
+
+
+        assert!(coin::value(&fee)  == mintingtreasury.mintingfee, EWrongAmount);
+
+
+        balance::join(&mut mintingtreasury.balance, coin::into_balance(fee));
+
+        let nft = mint(name, description, url, ctx);
+        transfer::transfer(nft, tx_context::sender(ctx));
+
 
     }
+
+
+
+
+
+
+
 
 
 }
