@@ -34,6 +34,6 @@
 
 
 
-# enrolled success:
+# enrolled:
 
 ![enrolled success](./enroll.png)
