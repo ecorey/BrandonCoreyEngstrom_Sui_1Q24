@@ -754,11 +754,121 @@ module prer::lock_and_key {
 
 module prer::devnet_nft {
 
+    use sui::url::{Self, Url};
+    use std::string;
+    use sui::object::{Self, UID, ID};
+    use sui::event;
+    use sui::transfer;
+    use sui::tx_context::{Self, TxContext};
 
 
 
 
+    struct DevNetNFT has key, store {
+
+        id: UID,
+        name: string::String,
+        description: string::String,
+        url: Url
+
+    }
 
 
-    
+    struct NFTMinted has copy, drop {
+
+        object_id: ID,
+        creator: address,
+        name: string::String,
+
+    }
+
+
+
+    public fun name( nft: &DevNetNFT ): &string::String {
+        &nft.name
+    }
+
+
+    public fun description ( nft: &DevNetNFT ): &string::String {
+        &nft.description
+    }
+
+
+    public fun url ( nft: &DevNetNFT ): &Url {
+        &nft.url
+    }
+
 }
+
+// ------------------------------------------------------------
+// DISPLAY AND NFT MUSCLE MEMORY EXERCISES
+
+
+module prer::muscle_memory {
+
+    use sui::tx_context::{sender, TxContext};
+    use std::string::{utf8, String};
+    use sui::transfer;
+    use sui::object::{Self, UID};
+
+    // used together
+    use sui::package;
+    use sui::display;
+
+    struct Cat has key, store {
+        id: UID, 
+        name: String, 
+        img_url: String,
+
+    }
+
+
+    // OTW
+    struct MUSCLE_MEMORY has drop {}
+
+
+    fun init(otw: MUSCLE_MEMORY, ctx: &mut TxContext) {
+        let keys = vector[
+            utf8(b"name"),
+            utf8(b"link"),
+            utf8(b"image_url"),
+            utf8(b"description"),
+            utf8(b"project_url"),
+            utf8(b"creator"),
+        ];
+
+        let values = vector[
+            utf8(b"{name}"),
+            utf8(b"https://sui-heroes.io/hero/{id}"),
+            utf8(b"ipfs://{img_url}"),
+            utf8(b"A true Hero of the Sui ecosystem!"),
+            utf8(b"https://sui-heroes.io"),
+            utf8(b"Unknown Sui Fan")
+        ];
+
+        let publisher = package::claim(otw, ctx);
+
+        let display = display::new_with_fields<Cat>(
+            &publisher, keys, values, ctx
+        );
+
+        display::update_version(&mut display);
+
+        transfer::public_transfer(publisher, sender(ctx));
+        transfer::public_transfer(display, sender(ctx));
+    }
+
+
+    public fun mint(name: String, img_url: String, ctx: &mut TxContext): Cat {
+        let id = object::new(ctx);
+        Cat {
+            id, name, img_url
+        }
+    }
+
+
+}
+
+
+
+
