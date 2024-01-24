@@ -21,3 +21,12 @@ airdrop:
 
 ![airdrop](./airdrop.png)
 
+
+transfer:
+
+    Success! Check our your TX here:
+        https://suiexplorer.com/txblock/GfNGEGQ3dfRgTQpKrfnvsohj4B58PUtffGHYKxB3whMw?network=devnet
+    Oops, something went wrong: Error: Failed to sign transaction by a quorum of validators because of locked objects. Retried a conflicting transaction Some(TransactionDigest(GfNGEGQ3dfRgTQpKrfnvsohj4B58PUtffGHYKxB3whMw)), success: Some(true)
+
+
+![transfer](./transfer.png)
