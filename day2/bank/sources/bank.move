@@ -22,9 +22,6 @@ module bank::bank{
     struct UserBalance has copy, drop, store { user: address }
     struct AdminBalance has copy, drop, store {  }
 
-
-
-
     const FEE: u128 = 5;
 
 
@@ -81,21 +78,25 @@ module bank::bank{
 
 
     // same logic opposite as above
-    // public fun withdraw(self: &mut Bank, ctx: &mut TxContext) : Coin<SUI> {
-            
-            
-    // }
+    public fun withdraw(self: &mut Bank, ctx: &mut TxContext): Coin<SUI> {
+        let sender = tx_context::sender(ctx);
+
+        if (df::exists_(&self.id, UserBalance { user: sender })) {
+        coin::from_balance(df::remove(&mut self.id, UserBalance { user: sender }), ctx)
+        } else {
+        coin::zero(ctx)
+        }
+    }
 
 
 
-
-
-    // public fun claim(_: &OwnerCap, self: &mut Bank, ctx: &mut TxContext) : Coin<SUI> {
-
-
-    // }
-
-
-
+    public fun claim(_: &OwnerCap, self: &mut Bank, ctx: &mut TxContext): Coin<SUI> {
+        let balance_mut = df::borrow_mut<AdminBalance, Balance<SUI>>(&mut self.id, AdminBalance {});
+        let total_admin_bal = balance::value(balance_mut);
+        coin::take(balance_mut, total_admin_bal, ctx)
+    }    
 
 }
+
+
+
