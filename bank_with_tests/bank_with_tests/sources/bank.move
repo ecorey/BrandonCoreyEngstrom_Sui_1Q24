@@ -9,7 +9,9 @@ module bank::bank {
   use sui::balance::{Self, Balance};
   use sui::tx_context::{Self, TxContext};
 
-  struct Bank has key {
+  
+
+  struct BankStruct has key {
     id: UID
   }
 
@@ -23,7 +25,7 @@ module bank::bank {
   const FEE: u128 = 5;
 
   fun init(ctx: &mut TxContext) {
-    let bank = Bank { id: object::new(ctx) };
+    let bank = BankStruct { id: object::new(ctx) };
 
     df::add(&mut bank.id, AdminBalance {}, balance::zero<SUI>());
 
@@ -34,7 +36,7 @@ module bank::bank {
     transfer::transfer(OwnerCap { id: object::new(ctx) }, tx_context::sender(ctx));
   }
   
-  public fun deposit(self: &mut Bank, token: Coin<SUI>, ctx: &mut TxContext) {
+  public fun deposit(self: &mut BankStruct, token: Coin<SUI>, ctx: &mut TxContext) {
     let value = coin::value(&token);
     let deposit_value = value - (((value as u128) * FEE / 100) as u64);
     let admin_fee = value - deposit_value;
@@ -51,7 +53,7 @@ module bank::bank {
     };
   }
 
-  public fun withdraw(self: &mut Bank, ctx: &mut TxContext): Coin<SUI> {
+  public fun withdraw(self: &mut BankStruct, ctx: &mut TxContext): Coin<SUI> {
     let sender = tx_context::sender(ctx);
 
     if (df::exists_(&self.id, UserBalance { user: sender })) {
@@ -61,7 +63,7 @@ module bank::bank {
     }
   }
 
-  public fun claim(_: &OwnerCap, self: &mut Bank, ctx: &mut TxContext): Coin<SUI> {
+  public fun claim(_: &OwnerCap, self: &mut BankStruct, ctx: &mut TxContext): Coin<SUI> {
     let balance_mut = df::borrow_mut<AdminBalance, Balance<SUI>>(&mut self.id, AdminBalance {});
     let total_admin_bal = balance::value(balance_mut);
     coin::take(balance_mut, total_admin_bal, ctx)
@@ -69,10 +71,10 @@ module bank::bank {
 
      
 
-  #[test]
-  public fun init_for_testing(ctx: &mut TxContext) {
-    init(ctx);
-  }
+  #[test_only]
+    public fun init_for_testing(ctx: &mut TxContext) {
+        init(ctx);
+    }
 
 
 
