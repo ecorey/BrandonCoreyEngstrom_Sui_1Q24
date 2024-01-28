@@ -1,3 +1,88 @@
+module bank::bank {
+
+
+  use sui::sui::SUI;
+  use sui::transfer;
+  use sui::coin::{Self, Coin};
+  use sui::object::{Self, UID};
+  use sui::dynamic_field as df;
+  use sui::balance::{Self, Balance};
+  use sui::tx_context::{Self, TxContext};
+
+  
+
+  struct BankStruct has key {
+    id: UID
+  }
+
+  struct OwnerCap has key, store {
+    id: UID
+  }
+
+  struct UserBalance has copy, drop, store { user: address }
+  struct AdminBalance has copy, drop, store {}
+
+  const FEE: u128 = 5;
+
+  fun init(ctx: &mut TxContext) {
+    let bank = BankStruct { id: object::new(ctx) };
+
+    df::add(&mut bank.id, AdminBalance {}, balance::zero<SUI>());
+
+    transfer::share_object(
+      bank
+    );
+
+    transfer::transfer(OwnerCap { id: object::new(ctx) }, tx_context::sender(ctx));
+  }
+  
+  public fun deposit(self: &mut BankStruct, token: Coin<SUI>, ctx: &mut TxContext) {
+    let value = coin::value(&token);
+    let deposit_value = value - (((value as u128) * FEE / 100) as u64);
+    let admin_fee = value - deposit_value;
+
+    let admin_coin = coin::split(&mut token, admin_fee, ctx);
+    balance::join(df::borrow_mut<AdminBalance, Balance<SUI>>(&mut self.id, AdminBalance {}), coin::into_balance(admin_coin));
+
+    let sender = tx_context::sender(ctx);
+
+    if (df::exists_(&self.id, UserBalance { user: sender })) {
+      balance::join(df::borrow_mut<UserBalance, Balance<SUI>>(&mut self.id, UserBalance { user: sender }), coin::into_balance(token));
+    } else {
+      df::add(&mut self.id, UserBalance { user: sender }, coin::into_balance(token));
+    };
+  }
+
+  public fun withdraw(self: &mut BankStruct, ctx: &mut TxContext): Coin<SUI> {
+    let sender = tx_context::sender(ctx);
+
+    if (df::exists_(&self.id, UserBalance { user: sender })) {
+      coin::from_balance(df::remove(&mut self.id, UserBalance { user: sender }), ctx)
+    } else {
+       coin::zero(ctx)
+    }
+  }
+
+  public fun claim(_: &OwnerCap, self: &mut BankStruct, ctx: &mut TxContext): Coin<SUI> {
+    let balance_mut = df::borrow_mut<AdminBalance, Balance<SUI>>(&mut self.id, AdminBalance {});
+    let total_admin_bal = balance::value(balance_mut);
+    coin::take(balance_mut, total_admin_bal, ctx)
+  }    
+
+     
+
+  #[test_only]
+    public fun init_for_testing(ctx: &mut TxContext) {
+        init(ctx);
+    }
+
+
+
+
+}
+
+
+
 #[test_only] 
 module bank::bank_tests {
 
@@ -9,12 +94,11 @@ module bank::bank_tests {
     use sui::balance::{Self, Balance};
     use sui::tx_context::{Self, TxContext};
 
-
-    use sui::test_utils::assert_eq;
-    use sui::coin::{mint_for_testing, burn_for_testing};
-    use sui::test_scenario::{Self, Scenario};
+    use sui::test_utils;
+    use sui::test_scenario;
     
-    use bank::bank::{Self, BankStruct, init_for_testing};
+    
+    use bank::bank::{Self, BankStruct, OwnerCap};
 
      
 
@@ -23,7 +107,7 @@ module bank::bank_tests {
     // #[test]
     // public fun init_for_testing(ctx: &mut TxContext) : test_scenario::Scenario {
 
-    //     use bank::bank::{Self, Bank};
+       
 
     //     let admin: address = @0xBEEF;
 
@@ -34,7 +118,7 @@ module bank::bank_tests {
     //     let scenario = &mut scenario_val;
         
     //     {
-    //         bank_with_tests::init_for_testing(test_scenario::ctx(scenario));
+    //         test_scenario::init_for_testing(test_scenario::ctx(scenario));
     //     };
         
     //     scenario_val
