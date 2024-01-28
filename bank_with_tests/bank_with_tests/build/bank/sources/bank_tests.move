@@ -104,25 +104,35 @@ module bank::bank_tests {
 
     
 
-    // #[test]
-    // public fun init_for_testing(ctx: &mut TxContext) : test_scenario::Scenario {
+    #[allow(unused_use)]
+    public fun test_make_bank(ctx: &mut TxContext)  {
 
        
 
-    //     let admin: address = @0xBEEF;
+        let admin: address = @0xBEEF;
 
-    //     let alice: address = @0x1337;    
+        let alice: address = @0x1337;    
 
-    //     let scenario_val = test_scenario::begin(admin);
+        let scenario_val = test_scenario::begin(admin);
 
-    //     let scenario = &mut scenario_val;
+        let scenario = &mut scenario_val;
+
+        test_scenario::next_tx(scenario, admin);
         
-    //     {
-    //         test_scenario::init_for_testing(test_scenario::ctx(scenario));
-    //     };
+        {
+            bank::init_for_testing(test_scenario::ctx(scenario));
+        };
         
-    //     scenario_val
-    // }
+        
+        // test_scenario::next_tx(scenario, alice);
+        // {
+
+        // }
+
+
+
+        test_scenario::end(scenario_val);
+    }
 
 
     // #[test]
@@ -165,6 +175,6 @@ module bank::bank_tests {
     // }
 
 
-
+  
 
 }
