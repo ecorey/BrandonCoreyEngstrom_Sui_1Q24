@@ -7,7 +7,10 @@
     "keygen": "ts-node ./keygen.ts",
     "airdrop": "ts-node ./airdrop.ts",
     "transfer": "ts-node ./transfer.ts",
-    "enroll": "ts-node ./enroll.ts"
+    "enroll": "ts-node ./enroll.ts",
+    "practice": "ts-node ./practice.ts",
+    "practice_2": "ts-node ./practice_2.ts"
+    
   },
   "dependencies": {
     "@mysten/sui.js": "^0.49.0",
