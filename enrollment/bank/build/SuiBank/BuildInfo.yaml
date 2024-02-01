@@ -1,0 +1,30 @@
+---
+compiled_package_info:
+  package_name: SuiBank
+  address_alias_instantiation:
+    std: "0000000000000000000000000000000000000000000000000000000000000001"
+    sui: "0000000000000000000000000000000000000000000000000000000000000002"
+    sui_bank: "0000000000000000000000000000000000000000000000000000000000000000"
+    switchboard: 98670585b87e06628ef2d7f7cb1e7bee8ada65b43b82997935225a7e6e21d18e
+    switchboard_std: 98670585b87e06628ef2d7f7cb1e7bee8ada65b43b82997935225a7e6e21d18e
+  source_digest: EE7E1137912C3AC79420158EDA6494B859E514756726A6632974F8B380356EA3
+  build_flags:
+    dev_mode: false
+    test_mode: false
+    generate_docs: false
+    install_dir: ~
+    force_recompilation: false
+    lock_file: "./Move.lock"
+    fetch_deps_only: false
+    skip_fetch_latest_git_deps: false
+    default_flavor: sui
+    default_edition: ~
+    deps_as_root: false
+    silence_warnings: false
+    warnings_are_errors: false
+    additional_named_addresses: {}
+    no_lint: false
+dependencies:
+  - MoveStdlib
+  - Sui
+  - SwitchboardStdLib
