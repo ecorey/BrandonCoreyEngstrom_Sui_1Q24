@@ -9,7 +9,8 @@
     "transfer": "ts-node ./transfer.ts",
     "enroll": "ts-node ./enroll.ts",
     "practice": "ts-node ./practice.ts",
-    "practice_2": "ts-node ./practice_2.ts"
+    "practice_2": "ts-node ./practice_2.ts",
+    "details": "ts-node ./transaction_details.ts"
     
   },
   "dependencies": {
