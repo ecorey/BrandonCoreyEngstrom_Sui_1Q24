@@ -10,7 +10,8 @@
     "enroll": "ts-node ./enroll.ts",
     "practice": "ts-node ./practice.ts",
     "practice_2": "ts-node ./practice_2.ts",
-    "details": "ts-node ./transaction_details.ts"
+    "details": "ts-node ./transaction_details.ts",
+    "ptb": "ts-node ./ptb_moveCall.ts"
     
   },
   "dependencies": {

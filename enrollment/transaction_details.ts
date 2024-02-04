@@ -43,6 +43,7 @@ const client = new SuiClient({
         console.log(`Success! Check our your TX here:
         https://suiexplorer.com/txblock/${txid.digest}?network=devnet`);
         
+        // get various fields from the transaction
         console.log(`\ntxn: ${txn.balanceChanges}`);
         
     } catch(e) {

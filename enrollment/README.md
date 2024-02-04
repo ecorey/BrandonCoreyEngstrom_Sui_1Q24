@@ -37,3 +37,28 @@
 # enrolled:
 
 ![enrolled success](./enroll.png)
+
+
+---
+
+
+to switch between devnet and testnet on cli
+
+sui client envs
+sui client switch --env testnet
+sui client active-env
+
+
+
+
+sui client publish --gas-budget 10000000 /home/ub/SUI_PROJECTS/WBA-SUI/enrollment/bank  --skip-dependency-verification
+
+sui client account-info 0x9d08a49d57a2e21fc154d2ddb7fce524b3c598bf5c3f3a7b4bc9dd06a886e640
+
+
+Published Bank Objects:                                                                                                                  │
+│  ┌──                                                                                                                                │
+│  │ PackageID: 0x40bff03fc40cfda9659f37f0d1902154e5822352c5b9c84dcfe02151cc71ba15                                                    │
+│  │ Version: 1                                                                                                                       │
+│  │ Digest: GfLonG9g7DBmGPjbUmmrwo3Nq5FZJ3mvgrWdNDFDnseD                                                                             │
+│  │ Modules: amm, bank, lending, oracle, sui_dollar                                                                                                       
